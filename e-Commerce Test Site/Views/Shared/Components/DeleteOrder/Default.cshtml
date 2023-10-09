@@ -1,0 +1,14 @@
+﻿@model AdminOrder
+
+<form class="d-flex flex-column align-items-center" asp-controller="Auth" asp-action="AdminAreaCommand">
+    <h3 class="text-center mb-4">Order n.</h3>
+    <input type="hidden" class="form-control" name="Command" value=@Model.Command />
+    <select class="form-select w-auto mb-2" name="Id">
+        @foreach (int orderId in Model.OrderIds)
+        {
+            <option value=@orderId>@orderId</option>
+        }
+    </select>
+    <button type="submit" class="btn btn-warning">Delete</button>
+</form>
+

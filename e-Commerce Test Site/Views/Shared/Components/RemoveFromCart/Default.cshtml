@@ -1,0 +1,8 @@
+﻿@using e_Commerce_Test_Site.Models.DTOs
+@model RemoveFromCartDTO
+
+<form asp-controller="Cart" asp-action="Remove" method="post">
+    <input type="hidden" asp-for="ProductId"/>
+    <input type="hidden" asp-for="IsAuthenticated"/>
+    <button type="submit" class="btn btn-danger mt-3 w-auto">Remove</button>
+</form>

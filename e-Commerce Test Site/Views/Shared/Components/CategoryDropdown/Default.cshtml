@@ -1,0 +1,11 @@
+﻿@model string[]
+
+<div class="dropdown custom-grey">
+    <button type="button" class="btn dropdown-toggle nav-item border border-end-0 round-exclude-right fs-6" data-bs-toggle="dropdown">All categories</button>
+    <div class="dropdown-menu">
+        @foreach(string category in Model)
+        {
+            <a class="dropdown-item" href="#">@category</a>
+        }
+    </div>
+</div>

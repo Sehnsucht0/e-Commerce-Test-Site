@@ -1,0 +1,118 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Identity
+@using System.Linq
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore
+@using e_Commerce_Test_Site.Models.DTOs
+@inject StoreUserContext ctx
+@inject UserManager<User> userManager
+@inject SignInManager<User> signinManager
+
+@{
+    ViewData["Title"] = "Cart";
+    decimal totalprice = 0;
+    List<SessionCartDTO> cartitems;
+    bool IsAuthenticated = signinManager.IsSignedIn(User);
+    if (IsAuthenticated)
+    {
+        var username = User.Identity!.Name;
+        var currentUser = await userManager.FindByNameAsync(username!);
+        var userId = currentUser!.Id;
+        User aspnetusers = ctx.Users.Find(userId) ?? new User();
+
+        if (!(ctx.Entry(aspnetusers).Reference("UserData").IsLoaded)) ctx.Entry(aspnetusers).Reference("UserData").Load();
+        UserData userData = aspnetusers.UserData ?? new UserData();
+        if (!(ctx.Entry(userData).Collection("CartItems").IsLoaded)) ctx.Entry(userData).Collection("CartItems").Load();
+
+        ICollection<CartItems> cartitemscollection = userData.CartItems ?? new List<CartItems>();
+        cartitems = cartitemscollection.Select(a => new SessionCartDTO()
+        {
+            ProductId = a.ProductId,
+            Quantity = a.Quantity
+        }).ToList();
+    }
+    else
+    {
+        string? cart = Context.Session.GetString("cart");
+
+        if (cart != null) cartitems = JsonSerializer.Deserialize<List<SessionCartDTO>>(cart) ?? new List<SessionCartDTO>();
+        else cartitems = new List<SessionCartDTO>();
+    }
+    List<Product> products = new List<Product>();
+    foreach (SessionCartDTO cartitem in cartitems)
+    {
+        products.Add(await APIGetter.GetProductById(cartitem.ProductId));
+    }
+    APIGetter.StoreCartOrder = products;
+    APIGetter.StoreCartQuantities = cartitems;
+}
+
+<div class="row">
+    @if (cartitems.Count != 0)
+    {
+        <h3 class="mb-5 text-center">Your cart</h3>
+        <div class="d-flex flex-column gap-1">
+            @for (int i = 0; i < products.Count; i++)
+            {
+                decimal discountDecimal = products[i].DiscountPercentage / 100;
+                decimal originalPrice = products[i].Price / (1 - discountDecimal);
+                totalprice += (products[i].Price * cartitems[i].Quantity);
+                AddToCartViewModel itemModel = new AddToCartViewModel() { ProductId = products[i].Id, Quantity = cartitems[i].Quantity, Stock = products[i].Stock };
+                RemoveFromCartDTO removeModel = new RemoveFromCartDTO() { ProductId = products[i].Id, IsAuthenticated = IsAuthenticated };
+
+                <div class="row @(i == 0 ? "border-top" : "") border-bottom p-3">
+                    <div class="col-sm-3"><img src=@(products[i].Thumbnail) style="width:200px;height:200px" /></div>
+                    <div class="col-sm-6 align-self-center">
+                        <h2>@products[i].Title</h2>
+                        @for (int j = 0; j < Math.Floor(products[i].Rating); j++)
+                        {
+                            <span class="fas fa-star starcheck"></span>
+                        }
+                        @for (int j = 0; j < (5 - Math.Floor(products[i].Rating)); j++)
+                        {
+                            <span class="fas fa-star"></span>
+                        }
+                        <span>@products[i].Rating.ToString(new CultureInfo("en-US", false))</span>
+                        <h6 class="mt-5">Remaining stock: @products[i].Stock</h6>
+                    </div>
+                    <div class="col-sm-2 align-self-center">
+                        <div class="d-flex gap-2">
+                            <div class="text-decoration-line-through h5">@originalPrice.ToString("c", new CultureInfo("it-IT", false))</div>
+                            <div class="text-danger h6">-@discountDecimal.ToString("p")</div>
+                        </div>
+                        <h3>@products[i].Price.ToString("c", new CultureInfo("it-IT", false))</h3>
+                    </div>
+                    <div class="col-sm-1 align-self-center">
+                        <vc:change-quantity-from-cart model=@itemModel></vc:change-quantity-from-cart>
+                        <vc:remove-from-cart model=@removeModel></vc:remove-from-cart>
+                    </div>
+                </div>
+            }
+            <div class="row p-3">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-7"></div>
+                <div class="col-sm-2" style="height:100px">
+                    <h5>Total</h5>
+                    <h3>@totalprice.ToString("c", new CultureInfo("it-IT", false))</h3>
+                </div>
+            </div>
+        </div>
+        <form class="mx-auto w-auto" asp-controller="Order" asp-action="CreateOrder" method="post">
+            @if(signinManager.IsSignedIn(User))
+            {
+                <input type="hidden" name="Username" value=@User.Identity!.Name />
+                <input type="hidden" name="Total" value=@totalprice />
+                <input type="hidden" name="Count" value=@products.Count />
+                <button type="submit" class="btn btn-warning p-4 fs-4">Place your order</button>
+            }
+            else
+            {
+                <a href="/auth/signin?transfer=true" class="btn btn-warning p-4 fs-4">Place your order</a>
+            }
+        </form>
+    }
+    else
+    {
+        <h2 class="text-center">Your cart is empty.</h2>
+    }
+</div>

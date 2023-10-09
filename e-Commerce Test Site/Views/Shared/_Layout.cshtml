@@ -1,0 +1,55 @@
+﻿@inject StoreUserContext ctx
+@{
+    int count = Utility.GetCartCount(Context, ctx);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-6.4.2-web/css/all.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/e_Commerce_Test_Site.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column">
+    <header class="sticky-top mb-5">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark p-4">
+            <div class="container-fluid">
+                <a href="/" class="navbar-brand"><span class="fas fa-shop me-2 fa-xl"></span>Test Shop</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#CollapsedNavbar"><span class="navbar-toggler-icon"></span></button>
+                <nav class="collapse navbar-collapse row ms-3" id="CollapsedNavbar">
+                    <div class="navbar-nav col-sm-2 col-xxl-1">
+                        <a href="/order" class="btn text-white fw-semibold fs-5 border border-white rounded">My orders</a>
+                    </div>
+                    <div class="navbar-nav col-sm-6 col-md-5 col-xxl-9">
+                        <vc:search-bar></vc:search-bar>
+                    </div>
+                    <div class="navbar-nav col-sm-2 col-xxl-1">
+                        <vc:account-dropdown></vc:account-dropdown>
+                    </div>
+                    <div class="navbar-nav col-sm-2 col-md-3 col-xxl-1">
+                        <vc:cart count=@count></vc:cart>
+                    </div>
+                </nav>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid flex-grow-1">
+    
+        @RenderBody()
+ 
+    </div>
+    
+    <footer class="mt-5 p-4 text-center bg-black text-white">
+        All data has been provided by the <a class="text-decoration-none" href="https://dummyjson.com" target="_blank" rel="noopener noreferrer">dummyJSON API</a>.
+        All the icons have been provided by the <a class="text-decoration-none" href="https://fontawesome.com" target="_blank" rel="noopener noreferrer">Font Awesome library</a>.
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

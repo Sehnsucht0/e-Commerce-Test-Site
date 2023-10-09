@@ -1,0 +1,13 @@
+﻿@model AddToCartViewModel
+
+<form asp-controller="Cart" asp-action="Add" method="post">
+    <select class="form-select w-auto" asp-for="Quantity">
+        @for (int i = 1; i <= Model.Stock; i++)
+        {
+            <option value=@i>@i</option>
+        }
+    </select>
+    <input type="hidden" value=@Model.ProductId asp-for="ProductId"/>
+    <input type="hidden" value=@Model.Stock asp-for="Stock" />
+    <button type="submit" class="btn btn-warning mt-3 w-auto">Update</button>
+</form>

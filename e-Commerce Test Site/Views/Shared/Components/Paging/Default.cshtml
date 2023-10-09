@@ -1,0 +1,14 @@
+﻿@using e_Commerce_Test_Site.Models.DTOs
+@model PagingDTO
+
+<h3 class="text-center">
+    @if(Model.Page > 1)
+    {
+        <a href=@("/search" + Model.PagingQuery + (Model.Page - 1))><span class="fas fa-arrow-left"></span></a>
+    }
+    @Model.Page / @Model.PageTotal
+    @if(Model.Page < Model.PageTotal)
+    {
+        <a href=@("/search" + Model.PagingQuery + (Model.Page + 1))><span class="fas fa-arrow-right"></span></a>
+    }
+</h3>

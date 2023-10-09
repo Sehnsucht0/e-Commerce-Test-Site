@@ -1,0 +1,9 @@
+﻿@model string[]
+
+<h3 class="mb-4">Categories</h3>
+<ul class="list-unstyled">
+    @foreach(string category in Model)
+    {
+        <li class="ms-1"><a class="link-underline link-underline-opacity-0 link-dark text-capitalize" href=@("/category/" + category)>@category</a></li>
+    }
+</ul>

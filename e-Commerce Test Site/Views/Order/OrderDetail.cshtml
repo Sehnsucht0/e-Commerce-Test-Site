@@ -1,0 +1,66 @@
+﻿@model List<UserOrder>
+@inject StoreUserContext context
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Order n."; //+ Model[0].OrderId;
+}
+
+<div class="row">
+    @if (Model.Count != 0)
+    {
+        decimal totalprice = 0;
+
+        <h3 class="mb-5 text-center">@("Order n." + Model[0].OrderId)</h3>
+        <div class="d-flex flex-column gap-1">
+            @foreach(UserOrder item in Model)
+            {
+                var product = context.Products.Find(item.ProductId) ?? new Product();
+                int quantity = item.Quantity;
+
+                decimal discountDecimal = product.DiscountPercentage / 100;
+                decimal originalPrice = product.Price / (1 - discountDecimal);
+                totalprice += (product.Price * quantity);
+
+                <div class="row @(Model.IndexOf(item) == 0 ? "border-top" : "") border-bottom p-3">
+                    <div class="col-sm-3"><img src=@(product.Thumbnail) style="width:200px;height:200px" /></div>
+                    <div class="col-sm-6 align-self-center">
+                        <h2>@product.Title</h2>
+                        @for (int j = 0; j < Math.Floor(product.Rating); j++)
+                        {
+                            <span class="fas fa-star starcheck"></span>
+                        }
+                        @for (int j = 0; j < (5 - Math.Floor(product.Rating)); j++)
+                        {
+                            <span class="fas fa-star"></span>
+                        }
+                        <span>@product.Rating.ToString(new CultureInfo("en-US", false))</span>
+                        <h6 class="mt-5">Remaining stock: @product.Stock</h6>
+                    </div>
+                    <div class="col-sm-2 align-self-center">
+                        <div class="d-flex gap-2">
+                            <div class="text-decoration-line-through h5">@originalPrice.ToString("c", new CultureInfo("it-IT", false))</div>
+                            <div class="text-danger h6">-@discountDecimal.ToString("p")</div>
+                        </div>
+                        <h3>@product.Price.ToString("c", new CultureInfo("it-IT", false))</h3> <!--maybe make user choose the currency and use a variable, new CultureInfo(currency, false)-->
+                    </div>
+                    <div class="col-sm-1 align-self-center">
+                        <div class="fs-5">Quantity: @quantity</div>
+                    </div>
+                </div>
+            }
+            <div class="row p-3">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-7"></div>
+                <div class="col-sm-2" style="height:100px">
+                    <h5>Total</h5>
+                    <h3>@totalprice.ToString("c", new CultureInfo("it-IT", false))</h3>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h3 class="text-center">Your order details were not found.</h3>
+    }
+</div>

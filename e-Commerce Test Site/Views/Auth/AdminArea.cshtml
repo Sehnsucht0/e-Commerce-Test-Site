@@ -1,0 +1,27 @@
+﻿@using e_Commerce_Test_Site.Models.DTOs
+@model AdminAreaModel
+
+@{
+    var userlist = Model.Context!.Users.Where(a => a.UserName != User.Identity!.Name).Select(a => new AdminAreaUserDTO() {Username = a.UserName, UserId = a.Id}).ToList();
+}
+
+<h3 class="text-center mb-5">Admin Area</h3>
+
+
+<form class="d-flex justify-content-center gap-4 mb-5" method="post">
+    <select class="form-select w-auto" asp-for="UserId">
+        @foreach (AdminAreaUserDTO user in userlist)
+        {
+            <option value="@user.UserId">@user.Username</option>
+        }
+    </select>
+    <button type="submit" class="btn btn-danger">Display User</button>
+</form>
+
+@if (Model.UserId != null)
+{
+    <div class="d-flex justify-content-evenly">
+        <vc:delete-user command="delete" user-id=@Model.UserId></vc:delete-user>
+        <vc:delete-order command="deleteorder" user-id=@Model.UserId context=@Model.Context></vc:delete-order>
+    </div>
+}

@@ -1,0 +1,8 @@
+﻿@model AdminAreaCommand
+
+<form class="d-flex flex-column align-items-center" asp-controller="Auth" asp-action="AdminAreaCommand" method="post">
+    <h3 class="text-center mb-4">User</h3>
+    <input class="form-control" type="hidden" asp-for="Command" />
+    <input class="form-control" type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-warning">Delete</button>
+</form>

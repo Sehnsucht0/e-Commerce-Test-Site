@@ -1,0 +1,19 @@
+﻿@model SearchQuery
+@{
+    var categories = await APIGetter.GetCategoriesAsync();
+}
+
+<form class="d-flex w-100" asp-controller="Search" asp-action="Index" method="post">
+    <div class="custom-grey border border-end-0 rounded-start">
+        <select class="form-select custom-grey w-auto" asp-for="Category">
+            <option value="all">All categories</option>
+            @foreach (string category in categories)
+            {
+               <option class="text-capitalize" value="@category">@category</option>
+            }
+        </select>
+    </div>
+    <input class="form-control flex-grow-1 border border-start-0 border-end-0 round-exclude" type="search" asp-for="Name" />
+    <input type="hidden" value=1 asp-for="Page"/>
+    <button class="btn bg-warning nav-item round-exclude-left" type="submit"><span class="fas fa-magnifying-glass"></span></button>
+</form>

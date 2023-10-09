@@ -1,0 +1,28 @@
+﻿@model List<Order>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Your orders";
+}
+
+<div class="row">
+    @if (Model.Count != 0)
+    {
+        <h3 class="mb-5 text-center">Your orders</h3>
+        <div class="d-flex flex-column gap-1">
+            @foreach (Order order in Model)
+            {
+                <div class="row @(Model.IndexOf(order) == 0 ? "border-top" : "") border-bottom p-3 align-items-center">
+                    <div class="col-sm-6 fs-3">Order n.@(order.Id)</div>
+                    <div class="col-sm-2 text-center fs-5">@order.Total.ToString("c", new CultureInfo("it-IT", false))</div>
+                    <div class="col-sm-2 text-center fs-5">@(order.Count) products</div>
+                    <a href=@("/order/" + order.Id) class="col-sm-2 btn btn-warning w-auto mx-auto">Order Details</a>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <h3 class="text-center">There are no orders.</h3>
+    }
+</div>

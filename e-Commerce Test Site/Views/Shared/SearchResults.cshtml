@@ -1,0 +1,52 @@
+﻿@model Product[]
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Search results";
+    int currentpage = (int?)TempData["Page"] ?? 1;
+    int pagetotal = (int?)TempData["PageTotal"] ?? 1;
+    string pagingquery = (string?)TempData["PagingQuery"] ?? "";
+}
+
+<div class="row">
+    <vc:paging page=@currentpage pagetotal=@pagetotal pagingquery=@pagingquery></vc:paging>
+    <div class="col-sm-2 mt-2">
+        <vc:category-sidebar></vc:category-sidebar>
+    </div>
+
+    <div class="col-sm-10">
+        @foreach (Product product in Model)
+        {
+            var discountDecimal = product.DiscountPercentage / 100;
+            var originalPrice = product.Price / (1 - discountDecimal);
+
+            <div class="row mt-2 border-bottom p-3">
+                <div class="col-sm-2">
+                    <img class="img-thumbnail search-thumbnail" src=@product.Thumbnail alt=@product.Title />
+                </div>
+                <div class="col-sm-5 col-xxl-6">
+                    <h2>@product.Title</h2>
+                    @for (int i = 0; i < Math.Floor(product.Rating); i++)
+                    {
+                        <span class="fas fa-star starcheck"></span>
+                    }
+                    @for (int i = 0; i < (5 - Math.Floor(product.Rating)); i++)
+                    {
+                        <span class="fas fa-star"></span>
+                    }
+                    <span>@product.Rating.ToString(new CultureInfo("en-US", false))</span>
+                    <div class="mt-3 d-flex gap-2">
+                        <div class="text-decoration-line-through h5">@originalPrice.ToString("c", new CultureInfo("it-IT", false))</div>
+                        <div class="text-danger h6">-@discountDecimal.ToString("p")</div>
+                    </div>
+                    <h3>@product.Price.ToString("c", new CultureInfo("it-IT", false))</h3>
+                    <h6 class="mt-5">Remaining stock: @product.Stock</h6>
+                </div>
+                <div class="col-sm-3 d-flex flex-column gap-2 justify-content-center">
+                    <a class="btn btn-secondary" href="/product/@product.Id">View product</a>
+                    <vc:add-to-cart product-id=@product.Id stock=@product.Stock></vc:add-to-cart>
+                </div>
+            </div>
+        }
+    </div>
+</div>

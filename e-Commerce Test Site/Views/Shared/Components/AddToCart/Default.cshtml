@@ -1,0 +1,12 @@
+﻿@model AddToCartViewModel
+
+<form class="d-flex gap-1" asp-controller="Cart" asp-action="Add" method="post">
+    <button type="submit" class="btn btn-primary flex-grow-1">Add to cart</button>
+    <input type="hidden" asp-for="ProductId"/>
+    <select class="form-select w-auto" asp-for="Quantity">
+        @for (int i = 1; i <= Model.Stock; i++)
+        {
+            <option value=@i>@i</option>
+        }
+    </select>
+</form>

@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-6.4.2-web/css/all.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/e_Commerce_Test_Site.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column">
+    <div class="container-fluid flex-grow-1">
+        <div class="col-sm-3 mx-auto">
+            <header class="text-center p-4"><a class="text-decoration-none" href="/"><span class="fas fa-shop me-2 fa-2xl"></span>Test Shop</a></header>
+            @RenderBody()
+        </div>
+    </div>
+
+    <footer class="mt-5 p-4 text-center bg-black text-white">
+        All data has been provided by the <a class="text-decoration-none" href="https://dummyjson.com" target="_blank" rel="noopener noreferrer">dummyJSON API</a>.
+        All the icons have been provided by the <a class="text-decoration-none" href="https://fontawesome.com" target="_blank" rel="noopener noreferrer">Font Awesome library</a>.
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+﻿@using System.Security.Claims
+
+@{
+    bool isAuthenticated = User.Identity!.IsAuthenticated;
+    bool isAdmin = User.HasClaim(ClaimTypes.Email, "admin@admin.com");
+}
+
+<div class="dropdown">
+    <button type="button" class="btn text-white text-start d-flex align-items-center gap-2 dropdown-toggle" data-bs-toggle="dropdown">
+        <div class="d-inline-flex flex-column">
+            <div style="font-size: 0.8rem">Hello, @(isAuthenticated ? User.Identity.Name : "sign in")</div>
+            <div class="h6 mb-0 lh-1">My account</div>
+        </div>
+    </button>
+    <div class="dropdown-menu text-center">
+        @if(!isAuthenticated)
+        {
+            <a href="/auth/signin" class="btn btn-warning w-75">Sign in</a>
+            <div class="mt-2" style="font-size:0.75rem">Or register <a class="text-decoration-none" href="/auth/register">here</a></div>
+        }
+        else 
+        {
+            <a href="/auth/signout" class="btn btn-warning w-75">Sign out</a>
+        }
+        <hr class="dropdown-divider" />
+        <a class="dropdown-item" href="/auth/profile">Profile</a>
+        <a class="dropdown-item" href="/order">My orders</a>
+        @if (isAdmin)
+        {
+            <a class="dropdown-item" href="/auth/adminarea">Admin Area</a>
+        }
+    </div>
+</div>
