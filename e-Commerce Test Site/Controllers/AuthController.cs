@@ -25,7 +25,8 @@ namespace e_Commerce_Test_Site.Controllers
         public IActionResult Register()
         {
             if (User.Identity!.IsAuthenticated) return RedirectToAction("Index", "Home");
-            return View();
+            return View("Unavailable");
+            //return View();
         }
 
         [HttpGet]
@@ -35,7 +36,8 @@ namespace e_Commerce_Test_Site.Controllers
             if (User.Identity!.IsAuthenticated) return RedirectToAction("Index", "Home");
             TempData["previousUrl"] = Utility.GetPreviousUrlRelative(Request);
             if (transfer) TempData["Transfer"] = true;
-            return View();
+            return View("Unavailable");
+            //return View();
         }
 
         [HttpPost]
